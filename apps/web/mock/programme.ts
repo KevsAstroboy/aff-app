@@ -1,0 +1,57 @@
+import type { ProgrammeEvent } from "@/types";
+
+export const PROGRAMME: ProgrammeEvent[] = [
+  {
+    id: "e-001",
+    day: "samedi",
+    startTime: "09:00",
+    endTime: "10:00",
+    title: "Cérémonie d'ouverture officielle",
+    venue: "Grande scène",
+    isHot: true,
+  },
+  {
+    id: "e-002",
+    day: "samedi",
+    startTime: "10:30",
+    endTime: "12:00",
+    title: "Masterclass : L'avenir de la photographie africaine",
+    expert: "Samuel Fosso",
+    venue: "Salle A",
+    isHot: true,
+  },
+  {
+    id: "e-003",
+    day: "samedi",
+    startTime: "11:00",
+    endTime: "12:30",
+    title: "Atelier Design Thinking & Innovation",
+    venue: "Village Créatif",
+  },
+  {
+    id: "e-004",
+    day: "samedi",
+    startTime: "13:00",
+    endTime: "14:30",
+    title: "Panel : IA & Créativité",
+    venue: "Amphithéâtre",
+  },
+  {
+    id: "e-005",
+    day: "dimanche",
+    startTime: "10:00",
+    endTime: "11:30",
+    title: "Masterclass : Narration visuelle",
+    expert: "Maïmouna Doucouré",
+    venue: "Salle B",
+  },
+  {
+    id: "e-006",
+    day: "dimanche",
+    startTime: "14:00",
+    endTime: "15:30",
+    title: "Table ronde : Futur des industries créatives",
+    venue: "Amphithéâtre",
+    isHot: true,
+  },
+];

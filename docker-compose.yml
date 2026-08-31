@@ -1,0 +1,161 @@
+# ==============================================================================
+# Africa Future Festival - Full Stack Application
+# ==============================================================================
+# Usage (pour non-IT):
+#   1. Télécharger ce fichier
+#   2. docker-compose up -d
+#   3. Ouvrir http://localhost
+# ==============================================================================
+
+services:
+  # ─────────────────────────────────────────────────────────────────────────────
+  # PostgreSQL - Base de données principale
+  # ─────────────────────────────────────────────────────────────────────────────
+  postgres:
+    image: postgres:16-alpine
+    container_name: aff-postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: aff_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - aff-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    restart: unless-stopped
+
+  # ─────────────────────────────────────────────────────────────────────────────
+  # MongoDB - Messagerie temps réel
+  # ─────────────────────────────────────────────────────────────────────────────
+  mongodb:
+    image: mongo:7
+    container_name: aff-mongodb
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: mongo
+      MONGO_INITDB_ROOT_PASSWORD: mongo
+      MONGO_INITDB_DATABASE: aff_messages
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - aff-network
+    command: mongod --quiet
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  # ─────────────────────────────────────────────────────────────────────────────
+  # Redis - Cache et sessions WebSocket
+  # ─────────────────────────────────────────────────────────────────────────────
+  redis:
+    image: redis:7-alpine
+    container_name: aff-redis
+    volumes:
+      - redis_data:/data
+    networks:
+      - aff-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    restart: unless-stopped
+
+  # ─────────────────────────────────────────────────────────────────────────────
+  # MinIO - Stockage de fichiers (S3-compatible)
+  # ─────────────────────────────────────────────────────────────────────────────
+  minio:
+    image: minio/minio:latest
+    container_name: aff-minio
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    volumes:
+      - minio_data:/data
+    networks:
+      - aff-network
+    command: server /data --console-address ":9001"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  # ─────────────────────────────────────────────────────────────────────────────
+  # Application (API + Web + Nginx)
+  # ─────────────────────────────────────────────────────────────────────────────
+  app:
+    image: kevsengineer/aff-app:latest
+    container_name: aff-app
+    ports:
+      - "80:80"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      mongodb:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+    environment:
+      # PostgreSQL
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: aff_db
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/aff_db
+      # MongoDB
+      MONGO_HOST: mongodb
+      MONGO_URI: mongodb://mongo:mongo@mongodb:27017/aff_messages?authSource=admin
+      # Redis
+      REDIS_HOST: redis
+      REDIS_URL: redis://redis:6379
+      # MinIO
+      MINIO_HOST: minio
+      MINIO_ENDPOINT: minio
+      MINIO_PORT: 9000
+      MINIO_ACCESS_KEY: minioadmin
+      MINIO_SECRET_KEY: minioadmin
+      MINIO_BUCKET: aff-uploads
+      MINIO_USE_SSL: "false"
+      # JWT
+      JWT_SECRET: aff-super-secret-jwt-key-change-in-production-64-chars-minimum
+      JWT_EXPIRATION: 7d
+      # Email (SMTP Gmail)
+      MAIL_HOST: smtp.gmail.com
+      MAIL_PORT: 587
+      MAIL_USER: diakiteabdulkarim094@gmail.com
+      MAIL_PASS: iatqgllnacvnghdb
+      MAIL_FROM: "Africa Future Festival <diakiteabdulkarim094@gmail.com>"
+      # App
+      NODE_ENV: production
+      PORT: 3000
+    networks:
+      - aff-network
+    restart: unless-stopped
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Volumes persistants
+# ─────────────────────────────────────────────────────────────────────────────
+volumes:
+  postgres_data:
+  mongo_data:
+  redis_data:
+  minio_data:
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Réseau
+# ─────────────────────────────────────────────────────────────────────────────
+networks:
+  aff-network:
+    driver: bridge

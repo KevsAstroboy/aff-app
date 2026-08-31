@@ -1,0 +1,26 @@
+import type { AwardCategory } from "@/types";
+
+export const AWARD_CATEGORIES: AwardCategory[] = [
+  { id: "grand-prix", name: "Grand Prix Africa Future", section: "Trophée suprême" },
+  { id: "best-photo", name: "Meilleur Photographe de l'année", section: "Image & Visuel" },
+  { id: "best-director", name: "Meilleur Réalisateur vidéo", section: "Image & Visuel" },
+  { id: "best-designer", name: "Meilleur Designer graphique", section: "Image & Visuel" },
+  { id: "best-ia", name: "IA Créative - Innovation visuelle", section: "Image & Visuel" },
+  { id: "best-musician", name: "Artiste musical de l'année", section: "Son & Scène" },
+  { id: "best-podcast", name: "Meilleur Podcast francophone", section: "Son & Scène" },
+  { id: "best-beatmaker", name: "Meilleur Beatmaker/Producteur", section: "Son & Scène" },
+  { id: "best-fashion", name: "Designer Mode de l'année", section: "Mode & Style" },
+  { id: "best-stylist", name: "Styliste de l'année", section: "Mode & Style" },
+  { id: "best-sustainable", name: "Marque Mode durable", section: "Mode & Style" },
+  { id: "best-creator", name: "Content Creator de l'année", section: "Digital & Influence" },
+  { id: "best-influence", name: "Influenceur Impact social", section: "Digital & Influence" },
+  { id: "best-youtube", name: "Meilleure Chaîne YouTube créative", section: "Digital & Influence" },
+  { id: "best-architect", name: "Architecte de l'année", section: "Architecture & Espace" },
+  { id: "best-interior", name: "Design d'intérieur innovant", section: "Architecture & Espace" },
+  { id: "best-startup", name: "Start-up créative de l'année", section: "Entrepreneuriat & Impact" },
+  { id: "best-leader", name: "Leader Innovation", section: "Entrepreneuriat & Impact" },
+  { id: "best-impact", name: "Projet Impact social", section: "Entrepreneuriat & Impact" },
+  { id: "best-revelation", name: "Révélation de l'année", section: "Catégories spéciales" },
+  { id: "best-jury", name: "Prix du Jury international", section: "Catégories spéciales" },
+  { id: "best-public", name: "Prix du Public", section: "Catégories spéciales" },
+];

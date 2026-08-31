@@ -1,0 +1,111 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root,
+:root[data-theme="dark"] {
+  --color-bg: #000000;
+  --color-surface: #0f0f0f;
+  --color-surface-raised: #141414;
+  --color-surface-hover: rgba(255, 255, 255, 0.05);
+  --color-overlay: rgba(255, 255, 255, 0.05);
+  --color-overlay-strong: rgba(0, 0, 0, 0.7);
+  --color-border: #1f1f1f;
+  --color-border-strong: #262626;
+  --color-text: #f5f5f5;
+  --color-text-muted: #8a8a8a;
+  --color-text-subtle: #5c5c5c;
+  --color-gold: #e8b26f;
+  --color-gold-hover: #d49a4f;
+  --color-gold-soft: rgba(232, 178, 111, 0.12);
+  --color-gold-glow: rgba(232, 178, 111, 0.1);
+  --color-glow-subtle: rgba(232, 178, 111, 0.05);
+  --color-ring-offset: #000000;
+  --shadow-card: 0 1px 0 0 rgba(255, 255, 255, 0.02) inset;
+  color-scheme: dark;
+}
+
+:root[data-theme="light"] {
+  --color-bg: #ffffff;
+  --color-surface: #f7f7f7;
+  --color-surface-raised: #ffffff;
+  --color-surface-hover: rgba(0, 0, 0, 0.05);
+  --color-overlay: rgba(0, 0, 0, 0.05);
+  --color-overlay-strong: rgba(0, 0, 0, 0.5);
+  --color-border: #e5e5e5;
+  --color-border-strong: #d4d4d4;
+  --color-text: #0f0f0f;
+  --color-text-muted: #6b6b6b;
+  --color-text-subtle: #9a9a9a;
+  --color-gold: #d49a4f;
+  --color-gold-hover: #b8843f;
+  --color-gold-soft: rgba(212, 154, 79, 0.12);
+  --color-gold-glow: rgba(212, 154, 79, 0.08);
+  --color-glow-subtle: rgba(212, 154, 79, 0.04);
+  --color-ring-offset: #ffffff;
+  --shadow-card: 0 1px 2px 0 rgba(0, 0, 0, 0.04);
+  color-scheme: light;
+}
+
+html,
+body {
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: Inter, system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  border-color: var(--color-border);
+}
+
+::selection {
+  background: rgba(232, 178, 111, 0.3);
+  color: var(--color-text);
+}
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-thin::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: var(--color-border-strong);
+  border-radius: 3px;
+}
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+@keyframes page-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.page-fade-in {
+  animation: page-fade-in 0.28s ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-fade-in {
+    animation: none;
+  }
+}
