@@ -4,9 +4,14 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import { GlobalExceptionFilter } from './common/filters/global-exception.filter';
 import { DateFormatInterceptor } from './common/interceptors/date-format.interceptor';
+import * as bodyParser from 'body-parser';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { abortOnError: false });
+
+  // Increase body size limit for base64 image uploads (5MB image = ~7MB base64)
+  app.use(bodyParser.json({ limit: '10mb' }));
+  app.use(bodyParser.urlencoded({ limit: '10mb', extended: true }));
 
   app.useGlobalFilters(new GlobalExceptionFilter());
   app.useGlobalInterceptors(new DateFormatInterceptor());

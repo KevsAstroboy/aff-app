@@ -6,7 +6,13 @@ import { useAuthStore } from "@/stores/auth";
 import { apiClient } from "@/lib/api-client";
 import { create } from "zustand";
 
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3000";
+// WebSocket connects to origin (nginx proxies /socket.io to backend)
+function getWsUrl(): string {
+  if (typeof window !== "undefined") {
+    return window.location.origin;
+  }
+  return "http://localhost:3000";
+}
 
 type WsStore = {
   socket: Socket | null;
@@ -16,7 +22,7 @@ type WsStore = {
 };
 
 function buildSocket(namespace: string, token: string): Socket {
-  return io(`${BASE_URL}${namespace}`, {
+  return io(`${getWsUrl()}${namespace}`, {
     auth: { token },
     transports: ["websocket"],
     reconnectionAttempts: 10,

@@ -222,7 +222,7 @@ export async function getBillet(id: string): Promise<Billet> {
 export async function downloadBilletPdf(id: string): Promise<boolean> {
   try {
     const res = await fetch(
-      `${getBaseUrl()}/api/programme/masterclass/${id}/billet.pdf`,
+      `${getBaseUrl()}/programme/masterclass/${id}/billet.pdf`,
       {
         headers: getApiToken() ? { Authorization: `Bearer ${getApiToken()}` } : {},
       },

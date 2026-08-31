@@ -37,6 +37,13 @@ function hash(s: string) {
 
 export function mediaFileUrl(filePath?: string | null): string | null {
   if (!filePath) return null;
+  
+  // New format: /uploads/... (relative URL from nginx proxy)
+  if (filePath.startsWith('/uploads/')) {
+    return filePath;
+  }
+  
+  // Legacy format: http://minio:9000/bucket/path -> extract path for media API
   const m = filePath.match(/:\d+\/(.+)$/);
   const objPath = m && m[1];
   if (!objPath) return null;
