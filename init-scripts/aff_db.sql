@@ -927,6 +927,27 @@ INSERT INTO "user" (id, nom, prenom, username, email, is_officiel, is_active, cr
 VALUES (1, 'AFF', 'Officiel', 'aff_officiel', 'officiel@aff2026.ci', true, true, now(), false)
 ON CONFLICT (id) DO NOTHING;
 
+-- Comptes de démonstration
+-- Admin: username=admin, password=Admin123!
+INSERT INTO "user" (id, nom, prenom, username, email, password, is_officiel, is_active, created_at, is_deleted)
+VALUES (2, 'Admin', 'AFF', 'admin', 'admin@aff.com', '$2b$10$8JLkL2I.mu5Le6ImDhMEzOuQqrAJh70gwXxxSD8.ODy3SIic9bi86', false, true, now(), false)
+ON CONFLICT (id) DO NOTHING;
+
+-- User: username=user, password=User123!
+INSERT INTO "user" (id, nom, prenom, username, email, password, is_officiel, is_active, created_at, is_deleted)
+VALUES (3, 'Utilisateur', 'Demo', 'user', 'user@aff.com', '$2b$10$tT1vUPNxICKZzWXCds593Oshb9stXN/zk1gzV6pQrL/KZS9rhoZna', false, true, now(), false)
+ON CONFLICT (id) DO NOTHING;
+
+-- Assigner le profil Super Admin (id=4) à l'utilisateur admin
+INSERT INTO user_profil (user_id, profil_id, created_at, is_deleted)
+VALUES (2, 4, now(), false)
+ON CONFLICT (user_id, profil_id) DO NOTHING;
+
+-- Assigner le profil Participant (id=1) à l'utilisateur demo
+INSERT INTO user_profil (user_id, profil_id, created_at, is_deleted)
+VALUES (3, 1, now(), false)
+ON CONFLICT (user_id, profil_id) DO NOTHING;
+
 -- Canal général obligatoire, créé par le compte officiel
 INSERT INTO conversation (id, type_id, nom, description, is_canal_general, created_by, created_at, is_deleted)
 VALUES (1, 2, 'AFF Officiel', 'Canal officiel du festival', true, 1, now(), false)

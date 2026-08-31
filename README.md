@@ -175,6 +175,17 @@ Une fois lancée, ouvrez votre navigateur :
 
 > Si le port 80 est déjà utilisé, modifiez `"80:80"` en `"8080:80"` dans le docker-compose.yml, puis accédez à http://localhost:8080
 
+## Comptes de démonstration
+
+L'application est pré-configurée avec des comptes de test :
+
+| Username | Mot de passe | Rôle |
+|----------|--------------|------|
+| `admin` | `Admin123!` | Administrateur |
+| `user` | `User123!` | Utilisateur |
+
+> **Note** : Connectez-vous avec le **username** (pas l'email).
+
 ## Commandes utiles
 
 ```bash

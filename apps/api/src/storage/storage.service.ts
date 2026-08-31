@@ -25,7 +25,22 @@ export class StorageService implements OnModuleInit {
     const exists = await this.client.bucketExists(bucket);
     if (!exists) {
       await this.client.makeBucket(bucket);
+      this.logger.log(`Bucket ${bucket} created`);
     }
+    // Set public read policy so nginx can proxy without auth
+    const policy = {
+      Version: '2012-10-17',
+      Statement: [
+        {
+          Effect: 'Allow',
+          Principal: { AWS: ['*'] },
+          Action: ['s3:GetObject'],
+          Resource: [`arn:aws:s3:::${bucket}/*`],
+        },
+      ],
+    };
+    await this.client.setBucketPolicy(bucket, JSON.stringify(policy));
+    this.logger.log(`Bucket ${bucket} set to public read`);
   }
 
   async uploadFile(
@@ -38,12 +53,8 @@ export class StorageService implements OnModuleInit {
       'Content-Type': mimetype,
     });
 
-    const useSSL = this.config.get<string>('MINIO_USE_SSL') === 'true';
-    const protocol = useSSL ? 'https' : 'http';
-    const endpoint = this.config.getOrThrow('MINIO_ENDPOINT');
-    const port = this.config.getOrThrow('MINIO_PORT');
-
-    return `${protocol}://${endpoint}:${port}/${bucket}/${objectName}`;
+    // Return relative URL - nginx proxies /uploads/* to minio
+    return `/uploads/${objectName}`;
   }
 
   async uploadBase64(
