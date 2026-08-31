@@ -1,23 +1,26 @@
 // In Docker: NEXT_PUBLIC_API_URL=/api (relative, nginx proxies to backend)
-// In dev: NEXT_PUBLIC_API_URL=http://localhost:3000 (absolute)
+// In dev: NEXT_PUBLIC_API_URL=http://localhost:3000 (absolute, backend has /api prefix)
 const ENV_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3000";
 
 // For client-side: use relative path if set, otherwise absolute
-// For server-side build: need absolute URL
+// For server-side: need absolute URL pointing to backend's /api prefix
 function getBaseUrl(): string {
   // Browser: use relative URL if configured
   if (typeof window !== "undefined") {
     if (ENV_URL.startsWith("/")) {
       return `${window.location.origin}${ENV_URL}`;
     }
-    return ENV_URL;
+    // Dev mode: backend at localhost:3000 with /api prefix
+    return `${ENV_URL}/api`;
   }
-  // Server-side / build time: need absolute URL
-  // If relative, assume localhost for SSG/SSR
+  // Server-side / SSR: call backend directly with /api prefix
   if (ENV_URL.startsWith("/")) {
-    return `http://localhost:3000`;
+    // In Docker: nginx proxies /api to backend, but SSR runs inside container
+    // so we call backend directly at localhost:3000/api
+    return `http://127.0.0.1:3000/api`;
   }
-  return ENV_URL;
+  // Dev mode server-side
+  return `${ENV_URL}/api`;
 }
 
 export { getBaseUrl };
